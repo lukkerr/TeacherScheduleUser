@@ -1,5 +1,6 @@
 package com.pdist.user.Service;
 
+import com.pdist.user.Model.Login;
 import com.pdist.user.Model.Usuario;
 import com.pdist.user.Repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,13 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    public Usuario login(Login login) {
+        List<Usuario> users = this.read();
+        List<Usuario> filterUsers = users.stream().filter(user -> user.getRegistration().equals(login.getRegistration()) &&
+                user.getPassword().equals(login.getPassword())).toList();
+        return filterUsers.size() > 0 ? filterUsers.get(0) : null;
+    }
+
     public List<Usuario> read() {
         return this.usuarioRepository.findAll();
     }
@@ -23,7 +31,15 @@ public class UsuarioService {
     }
 
     @Transactional
-    public Usuario push(Usuario usuario){
+    public Usuario create(Usuario usuario) {
+        List<Usuario> users = this.read();
+        List<Usuario> filterUsers = users.stream().filter(user -> user.getRegistration().equals(usuario.getRegistration()) &&
+                user.getEmail().equals(usuario.getEmail()) && user.getCpf().equals(usuario.getCpf())).toList();
+        return filterUsers.size() == 0 ? this.usuarioRepository.save(usuario) : null;
+    }
+
+    @Transactional
+    public Usuario update(Usuario usuario){
         return this.usuarioRepository.save(usuario);
     }
 

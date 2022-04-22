@@ -1,5 +1,6 @@
 package com.pdist.user.Controller;
 
+import com.pdist.user.Model.Login;
 import com.pdist.user.Model.Usuario;
 import com.pdist.user.Service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,11 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @GetMapping("/login")
+    public Usuario login(@RequestBody Login login) {
+        return this.usuarioService.login(login);
+    }
+
     @GetMapping("/user")
     public List<Usuario> read(){
         return this.usuarioService.read();
@@ -26,12 +32,12 @@ public class UsuarioController {
 
     @PostMapping("/user")
     public Usuario create(@RequestBody Usuario usuario){
-        return this.usuarioService.push(usuario);
+        return this.usuarioService.create(usuario);
     }
 
     @PutMapping("/user/{id}")
     public Usuario update(@RequestBody Usuario usuario){
-        return this.usuarioService.push(usuario);
+        return this.usuarioService.update(usuario);
     }
 
     @DeleteMapping("/user/{id}")
